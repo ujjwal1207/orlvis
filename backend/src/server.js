@@ -26,9 +26,25 @@ const limiter = rateLimit({
 app.use(limiter)
 
 // CORS configuration
+const allowedOrigins = [
+  'http://localhost:3000', // Development
+  process.env.FRONTEND_URL, // Production frontend URL
+  'https://orlvis.onrender.com', // Render frontend deployment
+  'https://orlvis-frontend.onrender.com' // Alternative Render naming
+].filter(Boolean) // Remove any undefined values
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or Postman)
+      if (!origin) return callback(null, true)
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -44,13 +60,21 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
 app.use('/reports', express.static(path.join(__dirname, '../reports')))
 
 // Database connection
+const MONGODB_URI =
+  process.env.MONGODB_URI || 'mongodb://localhost:27017/orlvis'
+
 mongoose
-  .connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/oralvis_db', {
+  .connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
   .then(() => {
     console.log('✅ Connected to MongoDB')
+    console.log(
+      `🔗 Database: ${
+        MONGODB_URI.includes('mongodb+srv') ? 'MongoDB Atlas' : 'Local MongoDB'
+      }`
+    )
   })
   .catch(error => {
     console.error('❌ MongoDB connection error:', error)
@@ -64,7 +88,7 @@ app.use('/api/admin', adminRoutes)
 app.use('/api/reports', reportRoutes)
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'success',
     message: 'OralVis API is running',

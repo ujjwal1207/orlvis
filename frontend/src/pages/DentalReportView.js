@@ -24,17 +24,19 @@ const DentalReportView = () => {
       setLoading(true)
       const response = await submissionAPI.getSubmission(id)
       console.log('Submission response:', response)
-      
-      const submissionData = response.data.data?.submission || response.data.submission || response.data
+
+      const submissionData =
+        response.data.data?.submission ||
+        response.data.submission ||
+        response.data
       setSubmission(submissionData)
-      
+
       // Extract patient info from submission or user data
       const patientData = {
         fullName: submissionData.patientName || user?.fullName || 'Patient',
         phone: submissionData.patientPhone || user?.phone || 'N/A'
       }
       setPatient(patientData)
-      
     } catch (error) {
       console.error('Error fetching submission:', error)
       toast.error('Failed to load submission')
@@ -58,8 +60,8 @@ const DentalReportView = () => {
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="spinner"></div>
+      <div className='loading-container'>
+        <div className='spinner'></div>
         <p>Loading report...</p>
       </div>
     )
@@ -67,10 +69,10 @@ const DentalReportView = () => {
 
   if (!submission) {
     return (
-      <div className="error-container">
+      <div className='error-container'>
         <h2>Report Not Found</h2>
         <p>The requested report could not be found.</p>
-        <button onClick={handleBack} className="btn btn-primary">
+        <button onClick={handleBack} className='btn btn-primary'>
           <ArrowLeft size={16} />
           Go Back
         </button>
@@ -79,16 +81,16 @@ const DentalReportView = () => {
   }
 
   return (
-    <div className="dental-report-view">
+    <div className='dental-report-view'>
       {/* Action Bar */}
-      <div className="action-bar no-print">
-        <button onClick={handleBack} className="btn btn-secondary">
+      <div className='action-bar no-print'>
+        <button onClick={handleBack} className='btn btn-secondary'>
           <ArrowLeft size={16} />
           Back
         </button>
-        
-        <div className="action-buttons">
-          <button onClick={handlePrint} className="btn btn-primary">
+
+        <div className='action-buttons'>
+          <button onClick={handlePrint} className='btn btn-primary'>
             <FileText size={16} />
             Print Report
           </button>
@@ -96,7 +98,7 @@ const DentalReportView = () => {
       </div>
 
       {/* Report Content */}
-      <div className="report-container">
+      <div className='report-container'>
         <DentalReport submission={submission} patient={patient} />
       </div>
 
@@ -183,19 +185,23 @@ const DentalReportView = () => {
         }
 
         @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
         }
 
         @media print {
           .no-print {
             display: none !important;
           }
-          
+
           .dental-report-view {
             background: white;
           }
-          
+
           .report-container {
             padding: 0;
           }
@@ -205,7 +211,7 @@ const DentalReportView = () => {
           .action-bar {
             padding: 1rem;
           }
-          
+
           .report-container {
             padding: 1rem;
           }

@@ -53,151 +53,199 @@ const DentalReport = ({ submission, patient }) => {
     {
       condition: 'Crowns',
       color: '#FF00FF',
-      treatment: 'If the crown is loose or broken, better get it checked. Teeth coloured caps are the best ones.'
+      treatment:
+        'If the crown is loose or broken, better get it checked. Teeth coloured caps are the best ones.'
     }
   ]
 
-  const formatDate = (dateString) => {
+  const formatDate = dateString => {
     if (!dateString) return new Date().toLocaleDateString()
     return new Date(dateString).toLocaleDateString()
   }
 
   return (
-    <div className="dental-report">
+    <div className='dental-report'>
       {/* Header */}
-      <div className="report-header">
-        <div className="patient-info">
-          <span><strong>Name:</strong> {patient?.fullName || submission?.patientName || 'John'}</span>
-          <span><strong>Phone:</strong> {patient?.phone || '9786111111'}</span>
-          <span><strong>Date:</strong> {formatDate(submission?.createdAt)}</span>
+      <div className='report-header'>
+        <div className='patient-info'>
+          <span>
+            <strong>Name:</strong>{' '}
+            {patient?.fullName || submission?.patientName || 'John'}
+          </span>
+          <span>
+            <strong>Phone:</strong> {patient?.phone || '9786111111'}
+          </span>
+          <span>
+            <strong>Date:</strong> {formatDate(submission?.createdAt)}
+          </span>
         </div>
       </div>
 
       {/* Screening Report Section */}
-      <div className="screening-section">
+      <div className='screening-section'>
         <h2>SCREENING REPORT:</h2>
-        
-        <div className="dental-images">
+
+        <div className='dental-images'>
           {/* Upper Teeth */}
-          <div className="dental-view">
-            <div className="image-container">
-              <img 
-                src={submission?.originalImage?.path ? `/uploads/${submission.originalImage.filename}` : '/api/placeholder/250/200'} 
-                alt="Upper Teeth"
-                className="dental-image"
+          <div className='dental-view'>
+            <div className='image-container'>
+              <img
+                src={
+                  submission?.originalImage?.path
+                    ? `/uploads/${submission.originalImage.filename}`
+                    : '/api/placeholder/250/200'
+                }
+                alt='Upper Teeth'
+                className='dental-image'
               />
-              <div className="annotations">
-                {dentalAnalysis.upperTeeth.annotations.map((annotation, index) => (
-                  <div
-                    key={index}
-                    className="annotation-marker"
-                    style={{
-                      left: `${annotation.position.x}%`,
-                      top: `${annotation.position.y}%`,
-                      borderColor: annotation.color
-                    }}
-                  />
-                ))}
+              <div className='annotations'>
+                {dentalAnalysis.upperTeeth.annotations.map(
+                  (annotation, index) => (
+                    <div
+                      key={index}
+                      className='annotation-marker'
+                      style={{
+                        left: `${annotation.position.x}%`,
+                        top: `${annotation.position.y}%`,
+                        borderColor: annotation.color
+                      }}
+                    />
+                  )
+                )}
               </div>
             </div>
-            <div className="view-label upper">Upper Teeth</div>
+            <div className='view-label upper'>Upper Teeth</div>
           </div>
 
           {/* Front Teeth */}
-          <div className="dental-view">
-            <div className="image-container">
-              <img 
-                src={submission?.annotatedImage?.path ? `/uploads/${submission.annotatedImage.filename}` : submission?.originalImage?.path ? `/uploads/${submission.originalImage.filename}` : '/api/placeholder/250/200'} 
-                alt="Front Teeth"
-                className="dental-image"
+          <div className='dental-view'>
+            <div className='image-container'>
+              <img
+                src={
+                  submission?.annotatedImage?.path
+                    ? `/uploads/${submission.annotatedImage.filename}`
+                    : submission?.originalImage?.path
+                    ? `/uploads/${submission.originalImage.filename}`
+                    : '/api/placeholder/250/200'
+                }
+                alt='Front Teeth'
+                className='dental-image'
               />
-              <div className="annotations">
-                {dentalAnalysis.frontTeeth.annotations.map((annotation, index) => (
-                  <div
-                    key={index}
-                    className="annotation-marker"
-                    style={{
-                      left: `${annotation.position.x}%`,
-                      top: `${annotation.position.y}%`,
-                      borderColor: annotation.color
-                    }}
-                  />
-                ))}
+              <div className='annotations'>
+                {dentalAnalysis.frontTeeth.annotations.map(
+                  (annotation, index) => (
+                    <div
+                      key={index}
+                      className='annotation-marker'
+                      style={{
+                        left: `${annotation.position.x}%`,
+                        top: `${annotation.position.y}%`,
+                        borderColor: annotation.color
+                      }}
+                    />
+                  )
+                )}
               </div>
             </div>
-            <div className="view-label front">Front Teeth</div>
+            <div className='view-label front'>Front Teeth</div>
           </div>
 
           {/* Lower Teeth */}
-          <div className="dental-view">
-            <div className="image-container">
-              <img 
-                src={submission?.originalImage?.path ? `/uploads/${submission.originalImage.filename}` : '/api/placeholder/250/200'} 
-                alt="Lower Teeth"
-                className="dental-image"
+          <div className='dental-view'>
+            <div className='image-container'>
+              <img
+                src={
+                  submission?.originalImage?.path
+                    ? `/uploads/${submission.originalImage.filename}`
+                    : '/api/placeholder/250/200'
+                }
+                alt='Lower Teeth'
+                className='dental-image'
               />
-              <div className="annotations">
-                {dentalAnalysis.lowerTeeth.annotations.map((annotation, index) => (
-                  <div
-                    key={index}
-                    className="annotation-marker"
-                    style={{
-                      left: `${annotation.position.x}%`,
-                      top: `${annotation.position.y}%`,
-                      borderColor: annotation.color
-                    }}
-                  />
-                ))}
+              <div className='annotations'>
+                {dentalAnalysis.lowerTeeth.annotations.map(
+                  (annotation, index) => (
+                    <div
+                      key={index}
+                      className='annotation-marker'
+                      style={{
+                        left: `${annotation.position.x}%`,
+                        top: `${annotation.position.y}%`,
+                        borderColor: annotation.color
+                      }}
+                    />
+                  )
+                )}
               </div>
             </div>
-            <div className="view-label lower">Lower Teeth</div>
+            <div className='view-label lower'>Lower Teeth</div>
           </div>
         </div>
 
         {/* Legend */}
-        <div className="legend">
-          <div className="legend-item">
-            <div className="legend-color" style={{ backgroundColor: '#800080' }}></div>
+        <div className='legend'>
+          <div className='legend-item'>
+            <div
+              className='legend-color'
+              style={{ backgroundColor: '#800080' }}
+            ></div>
             <span>Inflammed / Red gums</span>
           </div>
-          <div className="legend-item">
-            <div className="legend-color" style={{ backgroundColor: '#FFFF00' }}></div>
+          <div className='legend-item'>
+            <div
+              className='legend-color'
+              style={{ backgroundColor: '#FFFF00' }}
+            ></div>
             <span>Maligned</span>
           </div>
-          <div className="legend-item">
-            <div className="legend-color" style={{ backgroundColor: '#808080' }}></div>
+          <div className='legend-item'>
+            <div
+              className='legend-color'
+              style={{ backgroundColor: '#808080' }}
+            ></div>
             <span>Receded gums</span>
           </div>
-          <div className="legend-item">
-            <div className="legend-color" style={{ backgroundColor: '#FF0000' }}></div>
+          <div className='legend-item'>
+            <div
+              className='legend-color'
+              style={{ backgroundColor: '#FF0000' }}
+            ></div>
             <span>Stains</span>
           </div>
-          <div className="legend-item">
-            <div className="legend-color" style={{ backgroundColor: '#00FFFF' }}></div>
+          <div className='legend-item'>
+            <div
+              className='legend-color'
+              style={{ backgroundColor: '#00FFFF' }}
+            ></div>
             <span>Attrition</span>
           </div>
-          <div className="legend-item">
-            <div className="legend-color" style={{ backgroundColor: '#FF00FF' }}></div>
+          <div className='legend-item'>
+            <div
+              className='legend-color'
+              style={{ backgroundColor: '#FF00FF' }}
+            ></div>
             <span>Crowns</span>
           </div>
         </div>
       </div>
 
       {/* Treatment Recommendations */}
-      <div className="treatment-section">
+      <div className='treatment-section'>
         <h2>TREATMENT RECOMMENDATIONS:</h2>
-        <div className="recommendations-list">
+        <div className='recommendations-list'>
           {treatmentRecommendations.map((recommendation, index) => (
-            <div key={index} className="recommendation-item">
-              <div className="condition-indicator">
-                <div 
-                  className="condition-color" 
+            <div key={index} className='recommendation-item'>
+              <div className='condition-indicator'>
+                <div
+                  className='condition-color'
                   style={{ backgroundColor: recommendation.color }}
                 ></div>
-                <span className="condition-name">{recommendation.condition}</span>
-                <span className="separator">:</span>
+                <span className='condition-name'>
+                  {recommendation.condition}
+                </span>
+                <span className='separator'>:</span>
               </div>
-              <span className="treatment-text">{recommendation.treatment}</span>
+              <span className='treatment-text'>{recommendation.treatment}</span>
             </div>
           ))}
         </div>
@@ -386,17 +434,17 @@ const DentalReport = ({ submission, patient }) => {
           .dental-images {
             flex-direction: column;
           }
-          
+
           .patient-info {
             flex-direction: column;
             gap: 10px;
             align-items: flex-start;
           }
-          
+
           .legend {
             justify-content: flex-start;
           }
-          
+
           .condition-indicator {
             min-width: 140px;
           }
