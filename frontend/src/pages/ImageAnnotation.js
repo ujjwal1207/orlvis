@@ -76,12 +76,12 @@ const ImageAnnotation = () => {
       console.log('Fetching submission for annotation:', submissionId)
       const response = await adminAPI.getSubmission(submissionId)
       console.log('Admin API response:', response)
-      
+
       if (!response?.data?.submission) {
         console.error('Invalid response structure:', response)
         throw new Error('Invalid submission data received')
       }
-      
+
       console.log('Setting submission:', response.data.submission)
       setSubmission(response.data.submission)
 

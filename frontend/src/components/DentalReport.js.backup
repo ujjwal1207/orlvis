@@ -13,15 +13,6 @@ const DentalReport = ({ submission, patient }) => {
     )
   }
 
-  // Get API base URL for images
-  const apiBaseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000'
-  
-  // Helper function to get image URL
-  const getImageUrl = (filename) => {
-    if (!filename) return '/api/placeholder/250/200'
-    return `${apiBaseUrl}/uploads/${filename}`
-  }
-
   // Sample dental analysis data - this would come from AI analysis
   const dentalAnalysis = {
     upperTeeth: {
@@ -111,7 +102,11 @@ const DentalReport = ({ submission, patient }) => {
           <div className='dental-view'>
             <div className='image-container'>
               <img
-                src={getImageUrl(submission?.originalImage?.filename)}
+                src={
+                  submission?.originalImage?.path
+                    ? `/uploads/${submission.originalImage.filename}`
+                    : '/api/placeholder/250/200'
+                }
                 alt='Upper Teeth'
                 className='dental-image'
               />
@@ -138,7 +133,13 @@ const DentalReport = ({ submission, patient }) => {
           <div className='dental-view'>
             <div className='image-container'>
               <img
-                src={getImageUrl(submission?.annotatedImage?.filename || submission?.originalImage?.filename)}
+                src={
+                  submission?.annotatedImage?.path
+                    ? `/uploads/${submission.annotatedImage.filename}`
+                    : submission?.originalImage?.path
+                    ? `/uploads/${submission.originalImage.filename}`
+                    : '/api/placeholder/250/200'
+                }
                 alt='Front Teeth'
                 className='dental-image'
               />
@@ -165,7 +166,11 @@ const DentalReport = ({ submission, patient }) => {
           <div className='dental-view'>
             <div className='image-container'>
               <img
-                src={getImageUrl(submission?.originalImage?.filename)}
+                src={
+                  submission?.originalImage?.path
+                    ? `/uploads/${submission.originalImage.filename}`
+                    : '/api/placeholder/250/200'
+                }
                 alt='Lower Teeth'
                 className='dental-image'
               />

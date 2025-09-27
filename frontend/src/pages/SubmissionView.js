@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { submissionAPI, reportAPI, openPDFInNewTab, downloadFile } from '../utils/api'
+import {
+  submissionAPI,
+  reportAPI,
+  openPDFInNewTab,
+  downloadFile
+} from '../utils/api'
 import {
   ArrowLeft,
   Download,
@@ -49,7 +54,9 @@ const SubmissionView = () => {
       const response = await reportAPI.downloadReport(submission.id)
 
       // Generate filename
-      const fileName = `OralVis-Report-${submission.patientId}-${Date.now()}.pdf`
+      const fileName = `OralVis-Report-${
+        submission.patientId
+      }-${Date.now()}.pdf`
       downloadFile(response.data, fileName)
       toast.success('Report downloaded successfully')
     } catch (error) {
