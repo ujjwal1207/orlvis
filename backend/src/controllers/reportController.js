@@ -73,6 +73,8 @@ const downloadReport = async (req, res) => {
     const user = req.user
 
     const submission = await Submission.findById(id)
+      .populate('patient', 'name email patientId phone')
+      .populate('reviewedBy', 'name email')
 
     if (!submission) {
       return res.status(404).json({
@@ -92,21 +94,52 @@ const downloadReport = async (req, res) => {
       })
     }
 
-    if (!submission.reportGenerated || !submission.reportPath) {
-      return res.status(404).json({
+    // Check if submission is ready for report generation
+    if (!['annotated', 'reported', 'completed'].includes(submission.status)) {
+      return res.status(400).json({
         status: 'error',
-        message: 'Report not available'
+        message: 'Submission must be annotated before report can be downloaded'
       })
     }
 
-    // Check if file exists
-    try {
-      await fs.access(submission.reportPath)
-    } catch (error) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'Report file not found'
-      })
+    let reportPath = submission.reportPath
+
+    // Check if report file exists, regenerate if not
+    if (!reportPath) {
+      // Report never generated, generate it now
+      const pdfGenerator = new PDFReportGenerator()
+      const reportData = await pdfGenerator.generateReport(submission)
+
+      // Update submission with report information
+      submission.reportPath = reportData.path
+      submission.reportUrl = reportData.url
+      submission.reportGenerated = true
+      submission.reportGeneratedAt = new Date()
+
+      // Update status to reported if not already
+      if (submission.status !== 'completed') {
+        await submission.updateStatus('reported', user._id)
+      }
+
+      await submission.save()
+      reportPath = reportData.path
+    } else {
+      // Check if file exists on disk
+      try {
+        await fs.access(reportPath)
+      } catch (error) {
+        // File doesn't exist, regenerate it
+        console.log('Report file not found, regenerating...')
+        const pdfGenerator = new PDFReportGenerator()
+        const reportData = await pdfGenerator.generateReport(submission)
+
+        // Update submission with new report information
+        submission.reportPath = reportData.path
+        submission.reportUrl = reportData.url
+        submission.reportGeneratedAt = new Date()
+        await submission.save()
+        reportPath = reportData.path
+      }
     }
 
     // Set response headers for PDF download
@@ -117,7 +150,7 @@ const downloadReport = async (req, res) => {
     res.setHeader('Cache-Control', 'no-cache')
 
     // Stream the file
-    const fileStream = require('fs').createReadStream(submission.reportPath)
+    const fileStream = require('fs').createReadStream(reportPath)
     fileStream.pipe(res)
 
     fileStream.on('error', error => {

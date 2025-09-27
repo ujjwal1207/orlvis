@@ -4,6 +4,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 const rateLimit = require('express-rate-limit')
 const path = require('path')
+const fs = require('fs')
 require('dotenv').config()
 
 // Import routes
@@ -13,6 +14,18 @@ const adminRoutes = require('./routes/admin')
 const reportRoutes = require('./routes/reports')
 
 const app = express()
+
+// Ensure necessary directories exist
+const uploadsDir = path.join(__dirname, '../uploads')
+const reportsDir = path.join(__dirname, '../reports')
+
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true })
+}
+
+if (!fs.existsSync(reportsDir)) {
+  fs.mkdirSync(reportsDir, { recursive: true })
+}
 
 // Security middleware
 app.use(helmet())
