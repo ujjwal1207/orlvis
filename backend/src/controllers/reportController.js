@@ -86,7 +86,7 @@ const downloadReport = async (req, res) => {
     // Check access permissions
     if (
       user.role === 'patient' &&
-      submission.patient.toString() !== user._id.toString()
+      submission.patient._id.toString() !== user._id.toString()
     ) {
       return res.status(403).json({
         status: 'error',
