@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { submissionAPI, reportAPI, openPDFInNewTab } from '../utils/api'
+import { submissionAPI, reportAPI, openPDFInNewTab, downloadFile } from '../utils/api'
 import {
   ArrowLeft,
   Download,
@@ -39,13 +39,19 @@ const SubmissionView = () => {
   }
 
   const handleDownloadReport = async () => {
-    if (!submission?.reportPath) {
-      toast.error('Report not available')
+    if (!submission?.id) {
+      toast.error('Submission not available')
       return
     }
 
     try {
-      window.open(`/api/reports/${submission._id}/download`, '_blank')
+      console.log('Downloading report for submission:', submission.id)
+      const response = await reportAPI.downloadReport(submission.id)
+
+      // Generate filename
+      const fileName = `OralVis-Report-${submission.patientId}-${Date.now()}.pdf`
+      downloadFile(response.data, fileName)
+      toast.success('Report downloaded successfully')
     } catch (error) {
       console.error('Error downloading report:', error)
       toast.error('Failed to download report')
@@ -55,15 +61,15 @@ const SubmissionView = () => {
   const handleViewReport = () => {
     console.log('View Report clicked!')
     console.log('Submission:', submission)
-    console.log('Submission ID:', submission?._id)
+    console.log('Submission ID:', submission?.id)
 
-    if (!submission?._id) {
+    if (!submission?.id) {
       toast.error('Submission not available')
       return
     }
 
     // Navigate to the new dental report UI
-    navigate(`/reports/${submission._id}`)
+    navigate(`/reports/${submission.id}`)
   }
 
   const formatDate = dateString => {
