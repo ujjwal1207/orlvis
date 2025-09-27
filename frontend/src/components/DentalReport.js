@@ -1,6 +1,18 @@
 import React from 'react'
 
 const DentalReport = ({ submission, patient }) => {
+  // Early return if no submission data
+  if (!submission) {
+    return (
+      <div className='dental-report'>
+        <div className='report-header'>
+          <h1>OralVis Dental Analysis Report</h1>
+          <p>Loading report data...</p>
+        </div>
+      </div>
+    )
+  }
+
   // Sample dental analysis data - this would come from AI analysis
   const dentalAnalysis = {
     upperTeeth: {

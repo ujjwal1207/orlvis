@@ -74,12 +74,17 @@ const ImageAnnotation = () => {
     try {
       setLoading(true)
       const response = await adminAPI.getSubmission(submissionId)
+      
+      if (!response?.data?.submission) {
+        throw new Error('Invalid submission data received')
+      }
+      
       setSubmission(response.data.submission)
 
       // Load existing annotations if any
-      if (response.data.submission.annotations) {
-        setAnnotations(response.data.submission.annotations)
-        setHistory([response.data.submission.annotations])
+      if (response.data.submission.annotatedImage?.annotations) {
+        setAnnotations(response.data.submission.annotatedImage.annotations)
+        setHistory([response.data.submission.annotatedImage.annotations])
         setHistoryStep(0)
       }
     } catch (error) {
